@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connor's Zoo Phone</title>
+
+<style>
+    body {
+        margin: 0;
+        background: radial-gradient(circle at top, #e0ffe5, #b3e6ff);
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        user-select: none;
+        touch-action: manipulation;
+        overscroll-behavior: none;
+    }
+
+    /* Splash Screen */
+    #splash {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: #ffe6cc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 999;
+        animation: fadeOut 2.5s forwards;
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        70% { opacity: 1; }
+        100% { opacity: 0; visibility: hidden; }
+    }
+
+    #splash h1 {
+        font-size: 40px;
+        color: #ff9933;
+    }
+
+    #splash p {
+        font-size: 22px;
+        color: #cc6600;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 2px 0;
+        font-size: 20px;
+        color: #ff9933;
+        text-shadow: 2px 2px #fff;
+    }
+
+    .lock-toggle {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 32px;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+    .lock-toggle svg {
+        width: 32px;
+        height: 32px;
+    }
+
+    .lock-toggle.roar {
+        transform: scale(1.4) rotate(10deg);
+    }
+
+    .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0px;
+        padding: 5px;
+        flex-grow: 1;
+    }
+
+    .btn {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 50%;
+        font-size: 34px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: 100px;
+        box-shadow: 0 4px 0 #ccc;
+        transition: transform 0.15s, background 0.15s;
+        margin: 0 auto;
+        color: #333;
+    }
+
+    .btn span {
+        font-size: 18px;
+        color: #fff;
+        margin-top: 4px;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px #000;
+    }
+
+    .number {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .letters {
+        font-size: 10px;
+        color: #666;
+        margin-top: 2px;
+    }
+
+    .btn img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .btn:active {
+        background: rgba(200, 200, 200, 0.8);
+        transform: scale(0.85) rotate(-3deg);
+    }
+
+    .roar-btn {
+        background: #4CAF50;
+    }
+
+    .roar-btn .number {
+        color: white;
+    }
+
+    .roar-btn img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .swipe-bar {
+        height: 60px;
+        background: rgba(204, 238, 255, 0.95);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        color: #333;
+        animation: wiggle 2s infinite ease-in-out;
+    }
+
+    @keyframes wiggle {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-6px); }
+        50% { transform: translateX(6px); }
+        75% { transform: translateX(-6px); }
+        100% { transform: translateX(0); }
+    }
+
+    .locked {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    /* Big Animal Animation */
+    #bigAnimal {
+        position: fixed;
+        bottom: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: bottom 0.6s ease-out;
+        z-index: 900;
+    }
+
+    #bigAnimal img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+
+    #bigAnimal.show {
+        bottom: 20px;
+    }
+</style>
+</head>
+<body>
+
+<!-- Splash Screen -->
+<div id="splash">
+    <h1>Connor's Zoo Phone</h1>
+    <p>Loading please wait Connor...<br>Mama Loves you</p>
+</div>
+
+<h1>Connor's Zoo Phone</h1>
+<div class="lock-toggle" id="lockBtn"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/></svg></div>
+
+<!-- Big Animal Animation -->
+<div id="bigAnimal"><img src="https://cdn.pixabay.com/photo/2018/07/31/22/08/lion-3576045_1280.jpg" alt="lion"></div>
+
+<div class="keypad" id="keypad">
+    <div class="btn"><div class="number">1</div></div>
+    <div class="btn"><div class="number">2</div><div class="letters">ABC</div></div>
+    <div class="btn"><div class="number">3</div><div class="letters">DEF</div></div>
+    <div class="btn"><div class="number">4</div><div class="letters">GHI</div></div>
+    <div class="btn"><div class="number">5</div><div class="letters">JKL</div></div>
+    <div class="btn"><div class="number">6</div><div class="letters">MNO</div></div>
+    <div class="btn"><div class="number">7</div><div class="letters">PQRS</div></div>
+    <div class="btn"><div class="number">8</div><div class="letters">TUV</div></div>
+    <div class="btn"><div class="number">9</div><div class="letters">WXYZ</div></div>
+    <div class="btn"><div class="number">*</div></div>
+    <div class="btn"><div class="number">0</div></div>
+    <div class="btn roar-btn"><img src="https://cdn.pixabay.com/photo/2018/07/31/22/08/lion-3576045_1280.jpg" alt="lion"></div>
+</div>
+
+<div class="swipe-bar" id="swipeBar">Swipe the zoo bar!</div>
+
+<script>
+/* --- SIMPLE SOUND ENGINE (Web Audio, no external files) --- */
+let audioCtx = null;
+
+function initAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+function playTone(freq, duration = 200) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration / 1000);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration / 1000);
+}
+
+/* Different tones per button */
+const buttonFrequencies = [
+    400, 450, 500,
+    550, 600, 650,
+    700, 750, 800,
+    350, 300, 250
+];
+
+/* --- BUTTON SOUND HANDLERS --- */
+const buttons = document.querySelectorAll(".btn");
+buttons.forEach((btn, index) => {
+    if (!btn.classList.contains("roar-btn")) {
+        btn.addEventListener("click", () => {
+            initAudio();
+            playTone(buttonFrequencies[index] || 500);
+        });
+    }
+});
+
+/* --- ROAR BUTTON --- */
+document.querySelector(".roar-btn").addEventListener("click", () => {
+    initAudio();
+    // Little roar effect: descending tones
+    playTone(800, 150);
+    setTimeout(() => playTone(600, 150), 160);
+    setTimeout(() => playTone(400, 200), 320);
+
+    const big = document.getElementById("bigAnimal");
+    big.classList.add("show");
+    setTimeout(() => big.classList.remove("show"), 1200);
+});
+
+/* --- SWIPE BAR SOUND --- */
+let swipeStartX = null;
+const bar = document.getElementById("swipeBar");
+
+bar.addEventListener("touchstart", e => {
+    initAudio();
+    swipeStartX = e.touches[0].clientX;
+});
+
+bar.addEventListener("touchend", e => {
+    if (swipeStartX === null) return;
+    let endX = e.changedTouches[0].clientX;
+
+    if (Math.abs(endX - swipeStartX) > 80) {
+        // Slide whistle-ish: rising tones
+        playTone(300, 120);
+        setTimeout(() => playTone(450, 120), 130);
+        setTimeout(() => playTone(600, 150), 260);
+
+        bar.textContent = "Wheeee!";
+        setTimeout(() => bar.textContent = "Swipe the zoo bar!", 1000);
+    }
+
+    swipeStartX = null;
+});
+
+/* --- BABY LOCK MODE --- */
+const lockIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-9h-8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2z"/></svg>';
+const lockOpenIcon = '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"/></svg>';
+
+let locked = false;
+const lockBtn = document.getElementById("lockBtn");
+const keypad = document.getElementById("keypad");
+
+lockBtn.addEventListener("click", () => {
+    locked = !locked;
+    if (locked) {
+        keypad.classList.add("locked");
+        bar.classList.add("locked");
+        lockBtn.innerHTML = lockIcon;
+        lockBtn.classList.add("roar");
+        setTimeout(() => lockBtn.classList.remove("roar"), 500);
+    } else {
+        keypad.classList.remove("locked");
+        bar.classList.remove("locked");
+        lockBtn.innerHTML = lockOpenIcon;
+    }
+});
+</script>
+
+</body>
+</html>
