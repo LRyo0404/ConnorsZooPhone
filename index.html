@@ -1,273 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#ffe6cc">
-<title>Connor's Zoo Phone</title>
-<style>
-  :root{
-    --bg-top: #e8fff0;
-    --bg-bottom: #d7eeff;
-    --accent: #ff9933;
-    --muted: #6b6b6b;
-    --card: rgba(255,255,255,0.95);
-    --glass: rgba(255,255,255,0.6);
-    --shadow: 0 8px 20px rgba(0,0,0,0.12);
-  }
-
-  html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial; -webkit-font-smoothing:antialiased;}
-  body{
-    display:flex; flex-direction:column; min-height:100vh;
-    background: linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
-    overscroll-behavior: none; user-select:none; touch-action: manipulation; color:#222;
-  }
-
-  /* SPLASH */
-  #splash {
-    position:fixed; inset:0; z-index:9999;
-    display:flex; align-items:center; justify-content:center; flex-direction:column;
-    background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.06));
-    animation: splashFade 2.2s ease forwards;
-  }
-  #splash.fallback { background: linear-gradient(180deg,#ffe6cc,#ffd9b3); }
-  #splash .badge { width:120px; height:120px; border-radius:24px; background:rgba(255,255,255,0.85); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow); margin-bottom:14px; overflow:hidden; }
-  #splash h1{ margin:0; font-size:20px; color:var(--accent); text-shadow:0 1px 0 #fff; font-weight:700; }
-  #splash p{ margin:8px 0 0; font-size:14px; color:var(--muted); text-align:center; line-height:1.2; }
-
-  @keyframes splashFade { 0%{opacity:1;transform:scale(1);} 75%{opacity:1;} 100%{opacity:0;visibility:hidden;pointer-events:none;transform:scale(.995);} }
-
-  header { display:flex; align-items:center; justify-content:center; position:relative; padding:10px 16px 6px; backdrop-filter: blur(6px); }
-  header h1{ margin:0; font-size:18px; color:var(--accent); font-weight:800; }
-
-  .lock-toggle { position:absolute; right:14px; top:6px; width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:transform .25s ease; background:var(--glass); box-shadow: 0 6px 14px rgba(0,0,0,0.08); }
-  .lock-toggle:active{ transform:scale(.96); }
-  .lock-toggle svg{ width:22px; height:22px; display:block; fill:#333; }
-
-  main { padding:12px; display:flex; flex-direction:column; gap:12px; flex:1; align-items:stretch; }
-
-  .keypad { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; justify-items:center; align-items:center; padding:6px; opacity:0; transform:translateY(8px); transition:opacity .6s ease, transform .6s ease; }
-  .keypad.ready { opacity:1; transform:translateY(0); }
-
-  .btn {
-    width:100%; max-width:120px; aspect-ratio:1/1; background:var(--card); border-radius:999px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:var(--shadow);
-    transition: transform .12s ease, box-shadow .12s ease, background .12s ease; -webkit-tap-highlight-color: transparent; position:relative; overflow:hidden; border:0;
-  }
-  .btn .emoji { font-size:34px; transform:translateY(-4px); }
-  .btn .number { font-size:20px; font-weight:800; color:#222; margin-top:6px; }
-  .btn .letters { font-size:10px; color:#777; margin-top:4px; letter-spacing:0.6px; }
-  .btn:active { transform: translateY(6px) scale(.94); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
-  .btn.roar-btn { background: linear-gradient(135deg,#ff8a65,#ff7043); color:#fff; }
-  .btn.roar-btn .number { color:#fff; }
-
-  .ripple { position:absolute; border-radius:50%; transform:scale(0); background:rgba(0,0,0,0.08); animation:ripple .6s linear; pointer-events:none; }
-  @keyframes ripple { to { transform:scale(6); opacity:0; } }
-
-  .swipe-bar { height:72px; border-radius:14px; background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8)); display:flex; align-items:center; justify-content:center; font-size:18px; color:#333; box-shadow: 0 8px 18px rgba(0,0,0,0.08); margin:0 12px 12px; position:relative; overflow:hidden; }
-  .swipe-hint { display:flex; gap:10px; align-items:center; opacity:.95; transition: transform .35s cubic-bezier(.2,.9,.2,1); }
-  .swipe-bar.whee { transform: translateY(-6px); }
-
-  #bigAnimal { position:fixed; left:50%; transform:translateX(-50%); bottom:-260px; z-index:900; transition:bottom .6s cubic-bezier(.2,.9,.2,1); pointer-events:none; }
-  #bigAnimal.show { bottom:22px; }
-  #bigAnimal img { width:160px; height:160px; border-radius:18px; object-fit:cover; box-shadow:var(--shadow); }
-
-  @media (max-width:420px){
-    .btn{ max-width:96px; }
-    .swipe-bar{ height:64px; font-size:16px; margin:0 10px 10px; }
-    #bigAnimal img{ width:130px; height:130px; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connor's Zoo Phone</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<!-- Splash: uses cover.jpg in same folder. If missing, JS adds .fallback -->
-<div id="splash" role="img" aria-label="Connor's Zoo Phone loading">
-  <div class="badge" aria-hidden="true">
-    <img id="splashImg" src="cover.jpg" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <img src="assets/splash.jpg" alt="Connor's Zoo Phone" class="splash-image"/>
+    <h1>Connor's Zoo Phone</h1>
   </div>
-  <h1>Connor's Zoo Phone</h1>
-  <p>Loading — please wait, Connor...<br> Mama loves you 💛</p>
-</div>
 
-<header>
-  <h1>Connor's Zoo Phone</h1>
-  <button id="lockBtn" class="lock-toggle" aria-pressed="false" aria-label="Toggle baby lock">
-    <!-- initial open lock icon -->
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/></svg>
-  </button>
-</header>
+  <!-- Main App -->
+  <div id="app" class="hidden">
+    <header>
+      <h2>🐾 Connor's Zoo Phone</h2>
+    </header>
 
-<main>
-  <section class="keypad" id="keypad" aria-label="Zoo keypad">
-    <button class="btn" data-index="0" aria-label="Monkey 1"><div class="emoji">🐵</div><div class="number">1</div></button>
-    <button class="btn" data-index="1" aria-label="Lion 2"><div class="emoji">🦁</div><div class="number">2</div><div class="letters">ABC</div></button>
-    <button class="btn" data-index="2" aria-label="Tiger 3"><div class="emoji">🐯</div><div class="number">3</div><div class="letters">DEF</div></button>
-    <button class="btn" data-index="3" aria-label="Panda 4"><div class="emoji">🐼</div><div class="number">4</div><div class="letters">GHI</div></button>
-    <button class="btn" data-index="4" aria-label="Frog 5"><div class="emoji">🐸</div><div class="number">5</div><div class="letters">JKL</div></button>
-    <button class="btn" data-index="5" aria-label="Fox 6"><div class="emoji">🦊</div><div class="number">6</div><div class="letters">MNO</div></button>
-    <button class="btn" data-index="6" aria-label="Bear 7"><div class="emoji">🐻</div><div class="number">7</div><div class="letters">PQRS</div></button>
-    <button class="btn" data-index="7" aria-label="Koala 8"><div class="emoji">🐨</div><div class="number">8</div><div class="letters">TUV</div></button>
-    <button class="btn" data-index="8" aria-label="Giraffe 9"><div class="emoji">🦒</div><div class="number">9</div><div class="letters">WXYZ</div></button>
-    <button class="btn" data-index="9" aria-label="Star"><div class="emoji">⭐</div><div class="number">*</div></button>
-    <button class="btn" data-index="10" aria-label="Zero"><div class="emoji">🦓</div><div class="number">0</div></button>
-    <button class="btn roar-btn" data-index="11" aria-label="Roar button"><div class="emoji">🦁</div><div class="number">ROAR!</div></button>
-  </section>
-
-  <div class="swipe-bar" id="swipeBar" aria-hidden="false">
-    <div class="swipe-hint" id="swipeHint">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12h14" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 5l7 7-7 7" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <div>Swipe the zoo bar!</div>
-    </div>
+    <main>
+      <p>Tap an animal to hear its sound!</p>
+      <div class="animal-grid">
+        <!-- Example buttons -->
+        <button class="animal-btn">🦁 Lion</button>
+        <button class="animal-btn">🐘 Elephant</button>
+        <button class="animal-btn">🐵 Monkey</button>
+        <button class="animal-btn">🐸 Frog</button>
+      </div>
+    </main>
   </div>
-</main>
 
-<!-- big animal popup uses same cover image -->
-<div id="bigAnimal" aria-hidden="true"><img id="bigAnimalImg" src="cover.jpg" alt=""></div>
-
-<script>
-/* ---------- Ensure cover.jpg exists; fallback if not ---------- */
-(function checkCover(){
-  const img = new Image();
-  img.src = 'cover.jpg';
-  img.onload = () => {
-    // set bigAnimal image explicitly (already set by src but ensure visible)
-    document.getElementById('bigAnimalImg').src = 'cover.jpg';
-  };
-  img.onerror = () => {
-    document.getElementById('splash').classList.add('fallback');
-    const badgeImg = document.querySelector('#splash .badge img');
-    if(badgeImg) badgeImg.style.display = 'none';
-    // use a simple emoji fallback for bigAnimal
-    const big = document.getElementById('bigAnimalImg');
-    big.src = '';
-    big.alt = '🦁';
-    big.style.display = 'none';
-    const bigWrap = document.getElementById('bigAnimal');
-    bigWrap.innerHTML = '<div style="font-size:120px; filter:drop-shadow(0 8px 18px rgba(0,0,0,0.12));">🦁</div>';
-  };
-})();
-
-/* ---------- Reveal keypad after splash (ensures user sees splash) ---------- */
-window.addEventListener('load', () => {
-  // ensure splash animation completes before showing keypad
-  setTimeout(() => {
-    document.querySelector('.keypad').classList.add('ready');
-  }, 900);
-});
-
-/* ---------- Web Audio simple tone engine ---------- */
-let audioCtx = null;
-function initAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-function playTone(freq, duration=200, type='sine'){
-  if(!audioCtx) return;
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.type = type; o.frequency.value = freq;
-  g.gain.setValueAtTime(0.18, audioCtx.currentTime);
-  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration/1000);
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start(); o.stop(audioCtx.currentTime + duration/1000);
-}
-const freqs = [420,470,520,570,620,670,720,770,820,360,310,900];
-
-/* ---------- Button interactions (pointer events for mouse & touch) ---------- */
-const buttons = document.querySelectorAll('.btn');
-buttons.forEach((btn) => {
-  btn.addEventListener('pointerdown', (ev) => {
-    // ignore if locked
-    if(document.querySelector('.keypad.locked')) return;
-
-    // ripple
-    const r = document.createElement('span');
-    r.className = 'ripple';
-    const rect = btn.getBoundingClientRect();
-    const size = Math.max(rect.width, rect.height) * 0.6;
-    r.style.width = r.style.height = size + 'px';
-    r.style.left = (ev.clientX - rect.left - size/2) + 'px';
-    r.style.top = (ev.clientY - rect.top - size/2) + 'px';
-    btn.appendChild(r);
-    setTimeout(()=> r.remove(), 650);
-
-    // audio & actions
-    initAudio();
-    const idx = Number(btn.dataset.index) || 0;
-    if(btn.classList.contains('roar-btn')){
-      playTone(900,140,'sawtooth');
-      setTimeout(()=> playTone(640,140,'sawtooth'),160);
-      setTimeout(()=> playTone(420,220,'sawtooth'),340);
-      const big = document.getElementById('bigAnimal');
-      big.classList.add('show');
-      setTimeout(()=> big.classList.remove('show'), 1200);
-    } else {
-      playTone(freqs[idx] || 500, 200, 'sine');
-    }
-  });
-});
-
-/* ---------- Swipe bar (touch + mouse) ---------- */
-const swipeBar = document.getElementById('swipeBar');
-let startX = null;
-function swipeStart(e){
-  initAudio();
-  startX = (e.touches ? e.touches[0].clientX : e.clientX);
-}
-function swipeEnd(e){
-  if(startX === null) return;
-  const endX = (e.changedTouches ? e.changedTouches[0].clientX : e.clientX);
-  if(Math.abs(endX - startX) > 80){
-    playTone(320,120); setTimeout(()=> playTone(460,120),130); setTimeout(()=> playTone(620,160),260);
-    swipeBar.classList.add('whee');
-    const hint = document.getElementById('swipeHint');
-    hint.textContent = 'Wheeee!';
-    setTimeout(()=> {
-      hint.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12h14" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 5l7 7-7 7" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> <div>Swipe the zoo bar!</div>';
-      swipeBar.classList.remove('whee');
-    }, 900);
-  }
-  startX = null;
-}
-swipeBar.addEventListener('touchstart', swipeStart);
-swipeBar.addEventListener('touchend', swipeEnd);
-swipeBar.addEventListener('mousedown', swipeStart);
-swipeBar.addEventListener('mouseup', swipeEnd);
-
-/* ---------- Baby lock toggle ---------- */
-let locked = false;
-const lockBtn = document.getElementById('lockBtn');
-const keypad = document.getElementById('keypad');
-const swipe = document.getElementById('swipeBar');
-
-const lockSVG = {
-  open: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2z"/></svg>',
-  closed: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0h24v24H0z" fill="none"/><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm6-9h-8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2z"/></svg>'
-};
-
-lockBtn.addEventListener('click', () => {
-  locked = !locked;
-  lockBtn.setAttribute('aria-pressed', String(locked));
-  if(locked){
-    keypad.classList.add('locked');
-    swipe.classList.add('locked');
-    lockBtn.innerHTML = lockSVG.closed;
-    lockBtn.animate([{transform:'scale(1)'},{transform:'scale(1.12)'},{transform:'scale(1)'}], {duration:420, easing:'ease-out'});
-  } else {
-    keypad.classList.remove('locked');
-    swipe.classList.remove('locked');
-    lockBtn.innerHTML = lockSVG.open;
-  }
-});
-
-/* ---------- Enable audio on first user interaction ---------- */
-function enableAudioOnce(){
-  initAudio();
-  document.removeEventListener('pointerdown', enableAudioOnce);
-}
-document.addEventListener('pointerdown', enableAudioOnce);
-
-/* ---------- Prevent accidental scroll while locked ---------- */
-document.addEventListener('touchmove', function(e){
-  if(document.querySelector('.keypad.locked')) e.preventDefault();
-}, {passive:false});
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
