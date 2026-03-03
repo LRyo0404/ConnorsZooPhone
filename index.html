@@ -2,36 +2,172 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Connor's Zoo Phone</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>iPhone Keypad Mock</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+      background: #f5f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .keypad-wrapper {
+      width: 100%;
+      max-width: 420px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 24px 16px 32px;
+    }
+
+    .display {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      font-size: 32px;
+      letter-spacing: 4px;
+      color: #111;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+
+    .keys {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: minmax(70px, 1fr);
+      gap: 12px;
+      flex: 3;
+    }
+
+    .key {
+      background: #ffffff;
+      border-radius: 999px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.05s ease;
+    }
+
+    .key:active {
+      transform: scale(0.96);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+      background: #f0f0f3;
+    }
+
+    .key-main {
+      font-size: 28px;
+      font-weight: 500;
+      color: #111;
+      line-height: 1;
+    }
+
+    .key-sub {
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #777;
+      margin-top: 4px;
+    }
+
+    .bottom-row {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .call-btn {
+      background: #34c759;
+      border-radius: 999px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 24px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.05s ease;
+    }
+
+    .call-btn:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
+      background: #2fb451;
+    }
+
+    .bottom-placeholder {
+      height: 56px;
+    }
+
+    .delete-btn {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #007aff;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .delete-btn:active {
+      opacity: 0.5;
+    }
+  </style>
 </head>
 <body>
+  <div class="keypad-wrapper">
+    <div id="display" class="display"></div>
 
-  <!-- Splash Screen -->
-  <div id="splash-screen">
-    <img src="assets/splash.jpg" alt="Connor's Zoo Phone" class="splash-image"/>
-    <h1>Connor's Zoo Phone</h1>
-  </div>
-
-  <!-- Main App -->
-  <div id="app" class="hidden">
-    <header>
-      <h2>🐾 Connor's Zoo Phone</h2>
-    </header>
-
-    <main>
-      <p>Tap an animal to hear its sound!</p>
-      <div class="animal-grid">
-        <!-- Example buttons -->
-        <button class="animal-btn">🦁 Lion</button>
-        <button class="animal-btn">🐘 Elephant</button>
-        <button class="animal-btn">🐵 Monkey</button>
-        <button class="animal-btn">🐸 Frog</button>
+    <div class="keys">
+      <div class="key" data-value="1">
+        <div class="key-main">1</div>
       </div>
-    </main>
-  </div>
+      <div class="key" data-value="2">
+        <div class="key-main">2</div>
+        <div class="key-sub">ABC</div>
+      </div>
+      <div class="key" data-value="3">
+        <div class="key-main">3</div>
+        <div class="key-sub">DEF</div>
+      </div>
 
-  <script src="app.js"></script>
-</body>
-</html>
+      <div class="key" data-value="4">
+        <div class="key-main">4</div>
+        <div class="key-sub">GHI</div>
+      </div>
+      <div class="key" data-value="5">
+        <div class="key-main">5</div>
+        <div class="key-sub">JKL</div>
+      </div>
+      <div class="key" data-value="6">
+        <div class="key-main">6</div>
+        <div class="key-sub">MNO</div>
+      </div>
+
+      <div class="key" data-value="7">
+        <div class="key-main">7</div>
+        <div class="key-sub">PQRS</div>
+      </div>
+      <div class="key" data-value="8">
+        <div class="key-main">
