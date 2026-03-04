@@ -1,387 +1,308 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Connor's iPhone</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incoming Call</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
+<style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
-      background: #a7d8ff;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+        margin: 0;
+        background: #000;
+        font-family: Arial, sans-serif;
+        color: white;
+        height: 100vh;
+        overflow: hidden;
     }
 
-    .keypad-wrapper {
-      width: 100%;
-      max-width: 420px;
-      height: 60vh; /* Responsive medium keypad */
-      display: flex;
-      flex-direction: column;
-      padding: 20px 16px;
-      background: #a7d8ff;
+    /* Splash Screen */
+    #splash {
+        position: fixed;
+        inset: 0;
+        background: #000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 1s ease;
     }
 
-    .display {
-      height: 60px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      font-size: 28px;
-      letter-spacing: 4px;
-      color: #111;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #ddd;
-      margin-bottom: 10px;
-      word-break: break-all;
+    #splash img {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
     }
 
-    .keys {
-      flex: 1;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-auto-rows: 1fr;
-      gap: 10px;
+    #splash p {
+        font-size: 22px;
+        opacity: 0.8;
     }
 
-    .key {
-      background: #ffffff;
-      border-radius: 999px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      user-select: none;
-      transition: transform 0.05s ease, background 0.05s ease;
-    }
-
-    .key:active {
-      transform: scale(0.94);
-      background: #f0f0f3;
-    }
-
-    .key-main {
-      font-size: 26px;
-      font-weight: 500;
-      color: #111;
-    }
-
-    .key-sub {
-      font-size: 10px;
-      letter-spacing: 1px;
-      color: #777;
-      margin-top: 3px;
-    }
-
-    .bottom-row {
-      margin-top: 8px;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-      align-items: center;
-      height: 50px;
-    }
-
-    .call-btn {
-      background: #34c759;
-      border-radius: 999px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 22px;
-      cursor: pointer;
-    }
-
-    .delete-btn {
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-      color: #007aff;
-      cursor: pointer;
-    }
-
-    /* Incoming call bar */
+    /* Incoming Call Bar */
     .incoming-call-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 110px;
-      background: #004a99;
-      color: white;
-      display: flex;
-      align-items: center;
-      padding: 10px 16px;
-      border-top: 3px solid #003366;
-      animation: flash 1.2s infinite alternate, shake 3s infinite;
-      gap: 12px;
+        width: 100%;
+        background: #001a33;
+        padding: 20px 16px;
+        box-sizing: border-box;
+        text-align: center;
+        animation: pulse 1.2s infinite alternate;
     }
 
-    .caller-photo {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 2px solid #ffffffaa;
-      flex-shrink: 0;
+    @keyframes pulse {
+        from { background: #001a33; }
+        to { background: #003366; }
     }
 
+    /* Caller Image */
     .caller-photo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .caller-info {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 25px;
     }
 
     .caller-name {
-      font-size: 20px;
-      font-weight: 600;
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 5px;
     }
 
     .caller-label {
-      font-size: 14px;
-      opacity: 0.85;
+        font-size: 16px;
+        opacity: 0.7;
+        margin-bottom: 20px;
     }
 
-    /* Full-width slide to answer */
+    /* Slider */
     .slide-container {
-      flex: 1;
-      height: 50px;
-      border-radius: 999px;
-      background: #003366;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid #66aaff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+        width: 100%;
+        height: 70px;
+        background: #003366;
+        border-radius: 999px;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid #66aaff;
+        padding: 0 16px;
+        box-sizing: border-box;
     }
 
     .slide-track-text {
-      font-size: 15px;
-      color: #cde4ff;
-      pointer-events: none;
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        opacity: 0.8;
+        pointer-events: none;
     }
 
     .slide-handle {
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      width: 90px; /* Extra large */
-      height: 90px;
-      border-radius: 50%;
-      background: #34c759;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 40px;
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
-      transition: background 0.2s;
+        width: 70px;
+        height: 70px;
+        background: #66aaff;
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        color: #003366;
+        cursor: pointer;
+        transition: transform 0.2s ease;
     }
 
-    .slide-handle:active {
-      background: #2fb451;
+    /* Keypad */
+    .keypad-wrapper {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        margin-bottom: 60px;
     }
 
-    @keyframes flash {
-      0% { background: #004a99; }
-      100% { background: #0066cc; }
+    .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 90px);
+        grid-gap: 18px;
     }
 
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(-3px); }
+    .key {
+        width: 90px;
+        height: 90px;
+        background: #222;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        cursor: pointer;
+        transition: background 0.2s;
     }
-  </style>
+
+    .key:active {
+        background: #444;
+    }
+
+    /* Call Button */
+    .call-btn {
+        width: 90px;
+        height: 90px;
+        background: #00cc44;
+        border-radius: 50%;
+        margin: 20px auto 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        cursor: pointer;
+    }
+</style>
 </head>
 
 <body>
 
+<!-- Splash Screen -->
+<div id="splash">
+    <img src="connor.jpg" alt="Loading">
+    <p>Loading Connor… please wait</p>
+</div>
 
+<!-- Incoming Call UI -->
+<div class="incoming-call-bar" id="incomingBar">
 
-
-  <div class="keypad-wrapper">
-    <div id="display" class="display"></div>
-
-    <div class="keys">
-      <div class="key" data-value="1"><div class="key-main">1</div></div>
-      <div class="key" data-value="2"><div class="key-main">2</div><div class="key-sub">ABC</div></div>
-      <div class="key" data-value="3"><div class="key-main">3</div><div class="key-sub">DEF</div></div>
-
-      <div class="key" data-value="4"><div class="key-main">4</div><div class="key-sub">GHI</div></div>
-      <div class="key" data-value="5"><div class="key-main">5</div><div class="key-sub">JKL</div></div>
-      <div class="key" data-value="6"><div class="key-main">6</div><div class="key-sub">MNO</div></div>
-
-      <div class="key" data-value="7"><div class="key-main">7</div><div class="key-sub">PQRS</div></div>
-      <div class="key" data-value="8"><div class="key-main">8</div><div class="key-sub">TUV</div></div>
-      <div class="key" data-value="9"><div class="key-main">9</div><div class="key-sub">WXYZ</div></div>
-
-      <div class="key" data-value="*"><div class="key-main">*</div></div>
-      <div class="key" data-value="0"><div class="key-main">0</div></div>
-      <div class="key" data-value="#"><div class="key-main">#</div></div>
-    </div>
-
-    <div class="bottom-row">
-      <div></div>
-      <div class="call-btn">📞</div>
-      <div class="delete-btn">⌫</div>
-    </div>
-  </div>
-
-  <div class="incoming-call-bar" id="incomingBar">
     <div class="caller-photo">
-      <img src="connor..jpg" alt="Caller">
+        <img src="connor.jpg" alt="Caller">
     </div>
 
-    <div class="caller-info">
-      <div class="caller-name">Zoo HQ</div>
-      <div class="caller-label">Incoming call</div>
-    </div>
+    <div class="caller-name">Zoo HQ</div>
+    <div class="caller-label">Incoming call</div>
 
     <div class="slide-container" id="slideContainer">
-      <div class="slide-track-text" id="slideText">Slide to answer</div>
-      <div class="slide-handle" id="slideHandle">›</div>
+        <div class="slide-track-text" id="slideText">Slide to answer</div>
+        <div class="slide-handle" id="slideHandle">›</div>
     </div>
-  </div>
 
-  <script>
-    const display = document.getElementById("display");
-    const keys = document.querySelectorAll(".key");
+</div>
 
-    const sounds = {
-      "1": new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"),
-      "2": new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg"),
-      "3": new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"),
-      "4": new Audio("https://actions.google.com/sounds/v1/cartoon/slide_whistle_to_drum_hit.ogg"),
-      "5": new Audio("https://actions.google.com/sounds/v1/cartoon/metal_twang.ogg"),
-      "6": new Audio("https://actions.google.com/sounds/v1/cartoon/boing.ogg"),
-      "7": new Audio("https://actions.google.com/sounds/v1/cartoon/descending_whistle.ogg"),
-      "8": new Audio("https://actions.google.com/sounds/v1/cartoon/bubble_pop.ogg"),
-      "9": new Audio("https://actions.google.com/sounds/v1/cartoon/clang.ogg"),
-      "0": new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"),
-      "*": new Audio("https://actions.google.com/sounds/v1/cartoon/boing.ogg"),
-      "#": new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg")
-    };
+<div class="keypad-wrapper">
+    <div class="keypad">
+        <div class="key">1</div>
+        <div class="key">2</div>
+        <div class="key">3</div>
+        <div class="key">4</div>
+        <div class="key">5</div>
+        <div class="key">6</div>
+        <div class="key">7</div>
+        <div class="key">8</div>
+        <div class="key">9</div>
+        <div class="key">*</div>
+        <div class="key">0</div>
+        <div class="key">#</div>
+    </div>
+</div>
 
-    keys.forEach(key => {
-      key.addEventListener("click", () => {
-        const value = key.dataset.value;
-        display.textContent += value + " ";
-        if (sounds[value]) {
-          sounds[value].currentTime = 0;
-          sounds[value].play();
-        }
-      });
+<div class="call-btn">📞</div>
+
+<script>
+    /* Splash Screen Fade */
+    window.addEventListener("load", () => {
+        setTimeout(() => {
+            const splash = document.getElementById("splash");
+            splash.style.opacity = "0";
+            setTimeout(() => splash.remove(), 1000);
+        }, 1500);
     });
 
-    document.querySelector(".delete-btn").addEventListener("click", () => {
-      let parts = display.textContent.trim().split(" ");
-      parts.pop();
-      display.textContent = parts.join(" ") + (parts.length ? " " : "");
-    });
-
-    /* Ringtone */
-    const ringtone = new Audio("https://actions.google.com/sounds/v1/alarms/phone_alerts_and_rings.ogg");
-    ringtone.loop = true;
-
-    let ringtoneStarted = false;
-    function startRingtoneOnce() {
-      if (!ringtoneStarted) {
-        ringtone.play().catch(() => {});
-        ringtoneStarted = true;
-      }
-    }
-    document.addEventListener("click", startRingtoneOnce, { once: true });
-    document.addEventListener("touchstart", startRingtoneOnce, { once: true });
-
-    /* Slide to answer */
     const slideHandle = document.getElementById("slideHandle");
     const slideContainer = document.getElementById("slideContainer");
     const slideText = document.getElementById("slideText");
     const incomingBar = document.getElementById("incomingBar");
 
-    let isSliding = false;
+    let isDragging = false;
     let startX = 0;
-    let handleStartLeft = 0;
+
+    const ringtone = new Audio("https://actions.google.com/sounds/v1/alarms/phone_alerts_and_rings.ogg");
+    ringtone.loop = true;
+
+    const chime = new Audio("https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg");
+
+    let audioActivated = false;
+    let vibrationInterval = null;
+
+    /* First tap → chime + restart ringtone */
+    window.addEventListener("click", () => {
+        if (!audioActivated) {
+            chime.play().catch(()=>{});
+            ringtone.currentTime = 0;
+            ringtone.play().catch(()=>{});
+            audioActivated = true;
+
+            /* Start repeating vibration */
+            vibrationInterval = setInterval(() => {
+                if (navigator.vibrate) navigator.vibrate(200);
+            }, 1000);
+        }
+    });
 
     function getMaxLeft() {
-      return slideContainer.clientWidth - slideHandle.clientWidth - 5;
+        return slideContainer.clientWidth - slideHandle.clientWidth - 16;
     }
 
-    function onSlideStart(e) {
-      isSliding = true;
-      startX = (e.touches ? e.touches[0].clientX : e.clientX);
-      const currentLeft = parseFloat(getComputedStyle(slideHandle).left);
-      handleStartLeft = isNaN(currentLeft) ? 5 : currentLeft;
-      e.preventDefault();
-    }
+    slideHandle.addEventListener("mousedown", (e) => {
+        isDragging = true;
+        startX = e.clientX - slideHandle.offsetLeft;
+    });
 
-    function onSlideMove(e) {
-      if (!isSliding) return;
-      const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
-      let delta = clientX - startX;
-      let newLeft = handleStartLeft + delta;
-      if (newLeft < 5) newLeft = 5;
-      const maxLeft = getMaxLeft();
-      if (newLeft > maxLeft) newLeft = maxLeft;
-      slideHandle.style.left = newLeft + "px";
-    }
+    window.addEventListener("mouseup", () => {
+        if (!isDragging) return;
+        isDragging = false;
 
-    function onSlideEnd() {
-      if (!isSliding) return;
-      isSliding = false;
-      const maxLeft = getMaxLeft();
-      const currentLeft = parseFloat(getComputedStyle(slideHandle).left);
+        const maxLeft = getMaxLeft();
+        const currentLeft = parseInt(slideHandle.style.left || 0);
 
-      if (currentLeft >= maxLeft - 5) {
-        ringtone.pause();
-        ringtone.currentTime = 0;
-        incomingBar.style.animation = "none";
-        slideText.textContent = "Call Answered";
+        if (currentLeft >= maxLeft - 5) {
+            ringtone.pause();
+            ringtone.currentTime = 0;
+            incomingBar.style.animation = "none";
+            slideText.textContent = "Call Answered";
 
-        slideHandle.style.transition = "all 0.2s ease";
-        slideHandle.style.transform = "scale(0)";
-        slideHandle.style.opacity = "0";
+            slideHandle.style.transition = "all 0.2s ease";
+            slideHandle.style.transform = "scale(0)";
+            slideHandle.style.opacity = "0";
 
-      } else {
-        slideHandle.style.left = "5px";
-      }
-    }
+            /* Stop vibration */
+            clearInterval(vibrationInterval);
 
-    slideHandle.addEventListener("mousedown", onSlideStart);
-    slideHandle.addEventListener("touchstart", onSlideStart);
+            /* Remove green call button after 15 seconds */
+            setTimeout(() => {
+                const callBtn = document.querySelector(".call-btn");
+                if (callBtn) callBtn.remove();
+            }, 15000);
 
-    document.addEventListener("mousemove", onSlideMove);
-    document.addEventListener("touchmove", onSlideMove);
+        } else {
+            slideHandle.style.left = "0px";
+        }
+    });
 
-    document.addEventListener("mouseup", onSlideEnd);
-    document.addEventListener("touchend", onSlideEnd);
-  </script>
+    window.addEventListener("mousemove", (e) => {
+        if (!isDragging) return;
+
+        let newLeft = e.clientX - startX;
+        const maxLeft = getMaxLeft();
+
+        if (newLeft < 0) newLeft = 0;
+        if (newLeft > maxLeft) newLeft = maxLeft;
+
+        slideHandle.style.left = newLeft + "px";
+    });
+</script>
 
 </body>
 </html>
