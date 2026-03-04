@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>iPhone Keypad Mock</title>
+  <title>Connor's iPhone</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <style>
@@ -26,7 +27,7 @@
     .keypad-wrapper {
       width: 100%;
       max-width: 420px;
-      height: calc(100vh - 90px);
+      height: 60vh; /* Responsive medium keypad */
       display: flex;
       flex-direction: column;
       padding: 20px 16px;
@@ -34,11 +35,11 @@
     }
 
     .display {
-      height: 80px;
+      height: 60px;
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      font-size: 32px;
+      font-size: 28px;
       letter-spacing: 4px;
       color: #111;
       padding-bottom: 10px;
@@ -52,7 +53,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-auto-rows: 1fr;
-      gap: 12px;
+      gap: 10px;
     }
 
     .key {
@@ -65,85 +66,78 @@
       justify-content: center;
       cursor: pointer;
       user-select: none;
-      transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.05s ease;
+      transition: transform 0.05s ease, background 0.05s ease;
     }
 
     .key:active {
-      transform: scale(0.96);
+      transform: scale(0.94);
       background: #f0f0f3;
     }
 
     .key-main {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 500;
       color: #111;
     }
 
     .key-sub {
-      font-size: 11px;
+      font-size: 10px;
       letter-spacing: 1px;
       color: #777;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .bottom-row {
-      margin-top: 10px;
+      margin-top: 8px;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
-      height: 60px;
+      height: 50px;
     }
 
     .call-btn {
       background: #34c759;
       border-radius: 999px;
-      height: 56px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: 24px;
+      font-size: 22px;
       cursor: pointer;
     }
 
     .delete-btn {
-      height: 56px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 20px;
       color: #007aff;
       cursor: pointer;
     }
 
-    /* Incoming call area */
+    /* Incoming call bar */
     .incoming-call-bar {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 90px;
+      height: 110px;
       background: #004a99;
       color: white;
       display: flex;
       align-items: center;
-      padding: 8px 16px;
+      padding: 10px 16px;
       border-top: 3px solid #003366;
       animation: flash 1.2s infinite alternate, shake 3s infinite;
-    }
-
-    .incoming-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-      min-width: 0;
+      gap: 12px;
     }
 
     .caller-photo {
-      width: 52px;
-      height: 52px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       overflow: hidden;
       border: 2px solid #ffffffaa;
@@ -159,70 +153,54 @@
     .caller-info {
       display: flex;
       flex-direction: column;
-      min-width: 0;
+      flex: 1;
     }
 
     .caller-name {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .caller-label {
-      font-size: 13px;
-      opacity: 0.8;
+      font-size: 14px;
+      opacity: 0.85;
     }
 
-    .incoming-right {
-      flex: 1;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-    }
-
-    /* Slide to answer */
+    /* Full-width slide to answer */
     .slide-container {
-      width: 210px;
-      height: 40px;
+      flex: 1;
+      height: 50px;
       border-radius: 999px;
       background: #003366;
       position: relative;
       overflow: hidden;
       border: 1px solid #66aaff;
-    }
-
-    .slide-track-text {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      opacity: 0.9;
+    }
+
+    .slide-track-text {
+      font-size: 15px;
       color: #cde4ff;
       pointer-events: none;
     }
 
     .slide-handle {
       position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 36px;
-      height: 36px;
+      top: 5px;
+      left: 5px;
+      width: 90px; /* Extra large */
+      height: 90px;
       border-radius: 50%;
       background: #34c759;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: 18px;
+      font-size: 40px;
       cursor: pointer;
-      box-shadow: 0 0 8px rgba(0,0,0,0.4);
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
       transition: background 0.2s;
     }
 
@@ -238,15 +216,6 @@
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       50% { transform: translateX(-3px); }
-    }
-
-    .incoming-call-bar::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    .incoming-call-bar::-webkit-scrollbar-thumb {
-      background: #66aaff;
-      border-radius: 10px;
     }
   </style>
 </head>
@@ -282,21 +251,18 @@
   </div>
 
   <div class="incoming-call-bar" id="incomingBar">
-    <div class="incoming-left">
-      <div class="caller-photo">
-        <!-- Replace src with your actual image path -->
-        <img src="caller-photo.jpg" alt="Caller">
-      </div>
-      <div class="caller-info">
-        <div class="caller-name">Zoo HQ</div>
-        <div class="caller-label">Incoming call</div>
-      </div>
+    <div class="caller-photo">
+      <img src="connor.pjg" alt="Caller">
     </div>
-    <div class="incoming-right">
-      <div class="slide-container" id="slideContainer">
-        <div class="slide-track-text" id="slideText">Slide to answer</div>
-        <div class="slide-handle" id="slideHandle">›</div>
-      </div>
+
+    <div class="caller-info">
+      <div class="caller-name">Zoo HQ</div>
+      <div class="caller-label">Incoming call</div>
+    </div>
+
+    <div class="slide-container" id="slideContainer">
+      <div class="slide-track-text" id="slideText">Slide to answer</div>
+      <div class="slide-handle" id="slideHandle">›</div>
     </div>
   </div>
 
@@ -336,11 +302,10 @@
       display.textContent = parts.join(" ") + (parts.length ? " " : "");
     });
 
-    // Ringtone
+    /* Ringtone */
     const ringtone = new Audio("https://actions.google.com/sounds/v1/alarms/phone_alerts_and_rings.ogg");
     ringtone.loop = true;
 
-    // Start ringtone on first user interaction (browser autoplay policy)
     let ringtoneStarted = false;
     function startRingtoneOnce() {
       if (!ringtoneStarted) {
@@ -351,7 +316,7 @@
     document.addEventListener("click", startRingtoneOnce, { once: true });
     document.addEventListener("touchstart", startRingtoneOnce, { once: true });
 
-    // Slide to answer logic
+    /* Slide to answer */
     const slideHandle = document.getElementById("slideHandle");
     const slideContainer = document.getElementById("slideContainer");
     const slideText = document.getElementById("slideText");
@@ -362,14 +327,14 @@
     let handleStartLeft = 0;
 
     function getMaxLeft() {
-      return slideContainer.clientWidth - slideHandle.clientWidth - 2;
+      return slideContainer.clientWidth - slideHandle.clientWidth - 5;
     }
 
     function onSlideStart(e) {
       isSliding = true;
       startX = (e.touches ? e.touches[0].clientX : e.clientX);
       const currentLeft = parseFloat(getComputedStyle(slideHandle).left);
-      handleStartLeft = isNaN(currentLeft) ? 2 : currentLeft;
+      handleStartLeft = isNaN(currentLeft) ? 5 : currentLeft;
       e.preventDefault();
     }
 
@@ -378,7 +343,7 @@
       const clientX = (e.touches ? e.touches[0].clientX : e.clientX);
       let delta = clientX - startX;
       let newLeft = handleStartLeft + delta;
-      if (newLeft < 2) newLeft = 2;
+      if (newLeft < 5) newLeft = 5;
       const maxLeft = getMaxLeft();
       if (newLeft > maxLeft) newLeft = maxLeft;
       slideHandle.style.left = newLeft + "px";
@@ -389,15 +354,19 @@
       isSliding = false;
       const maxLeft = getMaxLeft();
       const currentLeft = parseFloat(getComputedStyle(slideHandle).left);
+
       if (currentLeft >= maxLeft - 5) {
-        // Answered
         ringtone.pause();
         ringtone.currentTime = 0;
         incomingBar.style.animation = "none";
-        slideText.textContent = "Call answered";
-        slideHandle.style.left = maxLeft + "px";
+        slideText.textContent = "Call Answered";
+
+        slideHandle.style.transition = "all 0.2s ease";
+        slideHandle.style.transform = "scale(0)";
+        slideHandle.style.opacity = "0";
+
       } else {
-        slideHandle.style.left = "2px";
+        slideHandle.style.left = "5px";
       }
     }
 
