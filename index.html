@@ -13,6 +13,8 @@
         color: white;
         height: 100vh;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Splash Screen */
@@ -41,23 +43,109 @@
         opacity: 0.8;
     }
 
-    /* Incoming Call Bar */
-    .incoming-call-bar {
+    /* Banner */
+    .banner {
         width: 100%;
-        background: #001a33;
-        padding: 20px 16px;
-        box-sizing: border-box;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .banner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(8px);
+        transition: filter 0.5s ease;
+    }
+
+    @media (min-width: 500px) {
+        .banner img { filter: blur(15px); }
+    }
+
+    @media (min-width: 900px) {
+        .banner img { filter: blur(25px); }
+    }
+
+    .banner::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 40%;
+        background: linear-gradient(to bottom, transparent, #000);
+    }
+
+    .banner-text {
+        position: absolute;
+        top: 50%;
+        width: 100%;
         text-align: center;
-        animation: pulse 1.2s infinite alternate;
+        transform: translateY(-50%);
+        text-shadow: 0 0 10px black;
     }
 
-    @keyframes pulse {
-        from { background: #001a33; }
-        to { background: #003366; }
+    .banner-title {
+        font-size: 32px;
+        font-weight: bold;
     }
 
-    /* Caller Image */
-    .caller-photo img {
+    .banner-sub {
+        font-size: 18px;
+        opacity: 0.8;
+    }
+
+    /* Keypad */
+    .keypad-wrapper {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 10px;
+    }
+
+    .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 90px);
+        grid-gap: 18px;
+    }
+
+    @media (max-width: 450px) {
+        .keypad {
+            grid-template-columns: repeat(3, 70px);
+            grid-gap: 14px;
+        }
+        .key {
+            width: 70px !important;
+            height: 70px !important;
+            font-size: 26px !important;
+        }
+    }
+
+    .key {
+        width: 90px;
+        height: 90px;
+        background: #222;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .key:active {
+        background: #444;
+    }
+
+    /* Bottom Section */
+    .bottom-section {
+        width: 100%;
+        text-align: center;
+        padding-bottom: 20px;
+    }
+
+    .caller-photo-bottom img {
         width: 120px;
         height: 120px;
         border-radius: 50%;
@@ -65,29 +153,29 @@
         margin-bottom: 25px;
     }
 
-    .caller-name {
-        font-size: 26px;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    .caller-label {
-        font-size: 16px;
-        opacity: 0.7;
-        margin-bottom: 20px;
+    @media (max-width: 450px) {
+        .caller-photo-bottom img {
+            width: 100px;
+            height: 100px;
+        }
     }
 
     /* Slider */
     .slide-container {
-        width: 100%;
+        width: calc(100% - 32px);
         height: 70px;
         background: #003366;
         border-radius: 999px;
         position: relative;
         overflow: hidden;
         border: 2px solid #66aaff;
-        padding: 0 16px;
-        box-sizing: border-box;
+        margin: 0 auto;
+    }
+
+    @media (max-width: 450px) {
+        .slide-container {
+            height: 60px;
+        }
     }
 
     .slide-track-text {
@@ -118,50 +206,12 @@
         transition: transform 0.2s ease;
     }
 
-    /* Keypad */
-    .keypad-wrapper {
-        flex: 1;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        margin-bottom: 60px;
-    }
-
-    .keypad {
-        display: grid;
-        grid-template-columns: repeat(3, 90px);
-        grid-gap: 18px;
-    }
-
-    .key {
-        width: 90px;
-        height: 90px;
-        background: #222;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 32px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .key:active {
-        background: #444;
-    }
-
-    /* Call Button */
-    .call-btn {
-        width: 90px;
-        height: 90px;
-        background: #00cc44;
-        border-radius: 50%;
-        margin: 20px auto 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 36px;
-        cursor: pointer;
+    @media (max-width: 450px) {
+        .slide-handle {
+            width: 60px;
+            height: 60px;
+            font-size: 32px;
+        }
     }
 </style>
 </head>
@@ -174,23 +224,16 @@
     <p>Loading Connor… please wait</p>
 </div>
 
-<!-- Incoming Call UI -->
-<div class="incoming-call-bar" id="incomingBar">
-
-    <div class="caller-photo">
-        <img src="connor.jpg" alt="Caller">
+<!-- Banner -->
+<div class="banner" id="banner">
+    <img src="connor.jpg" alt="Banner">
+    <div class="banner-text">
+        <div class="banner-title">Zoo HQ</div>
+        <div class="banner-sub">Incoming call</div>
     </div>
-
-    <div class="caller-name">Zoo HQ</div>
-    <div class="caller-label">Incoming call</div>
-
-    <div class="slide-container" id="slideContainer">
-        <div class="slide-track-text" id="slideText">Slide to answer</div>
-        <div class="slide-handle" id="slideHandle">›</div>
-    </div>
-
 </div>
 
+<!-- Keypad -->
 <div class="keypad-wrapper">
     <div class="keypad">
         <div class="key">1</div>
@@ -208,7 +251,17 @@
     </div>
 </div>
 
-<div class="call-btn">📞</div>
+<!-- Bottom Section -->
+<div class="bottom-section">
+    <div class="caller-photo-bottom">
+        <img src="connor.jpg" alt="Caller">
+    </div>
+
+    <div class="slide-container" id="slideContainer">
+        <div class="slide-track-text" id="slideText">Slide to answer</div>
+        <div class="slide-handle" id="slideHandle">›</div>
+    </div>
+</div>
 
 <script>
     /* Splash Screen Fade */
@@ -223,10 +276,6 @@
     const slideHandle = document.getElementById("slideHandle");
     const slideContainer = document.getElementById("slideContainer");
     const slideText = document.getElementById("slideText");
-    const incomingBar = document.getElementById("incomingBar");
-
-    let isDragging = false;
-    let startX = 0;
 
     const ringtone = new Audio("https://actions.google.com/sounds/v1/alarms/phone_alerts_and_rings.ogg");
     ringtone.loop = true;
@@ -244,64 +293,75 @@
             ringtone.play().catch(()=>{});
             audioActivated = true;
 
-            /* Start repeating vibration */
             vibrationInterval = setInterval(() => {
                 if (navigator.vibrate) navigator.vibrate(200);
             }, 1000);
         }
     });
 
-    function getMaxLeft() {
-        return slideContainer.clientWidth - slideHandle.clientWidth - 16;
+    function answerCall() {
+        ringtone.pause();
+        ringtone.currentTime = 0;
+        slideText.textContent = "Call Answered";
+
+        slideHandle.style.transition = "all 0.2s ease";
+        slideHandle.style.transform = "scale(0)";
+        slideHandle.style.opacity = "0";
+
+        clearInterval(vibrationInterval);
+
+        setTimeout(() => {
+            const callBtn = document.querySelector(".call-btn");
+            if (callBtn) callBtn.remove();
+        }, 15000);
     }
 
-    slideHandle.addEventListener("mousedown", (e) => {
+    /* Sliding Logic (Mouse + Touch) */
+    let isDragging = false;
+    let startX = 0;
+
+    function startDrag(clientX) {
         isDragging = true;
-        startX = e.clientX - slideHandle.offsetLeft;
-    });
+        const rect = slideContainer.getBoundingClientRect();
+        startX = clientX - rect.left - slideHandle.offsetLeft;
+    }
 
-    window.addEventListener("mouseup", () => {
-        if (!isDragging) return;
-        isDragging = false;
-
-        const maxLeft = getMaxLeft();
-        const currentLeft = parseInt(slideHandle.style.left || 0);
-
-        if (currentLeft >= maxLeft - 5) {
-            ringtone.pause();
-            ringtone.currentTime = 0;
-            incomingBar.style.animation = "none";
-            slideText.textContent = "Call Answered";
-
-            slideHandle.style.transition = "all 0.2s ease";
-            slideHandle.style.transform = "scale(0)";
-            slideHandle.style.opacity = "0";
-
-            /* Stop vibration */
-            clearInterval(vibrationInterval);
-
-            /* Remove green call button after 15 seconds */
-            setTimeout(() => {
-                const callBtn = document.querySelector(".call-btn");
-                if (callBtn) callBtn.remove();
-            }, 15000);
-
-        } else {
-            slideHandle.style.left = "0px";
-        }
-    });
-
-    window.addEventListener("mousemove", (e) => {
+    function moveDrag(clientX) {
         if (!isDragging) return;
 
-        let newLeft = e.clientX - startX;
-        const maxLeft = getMaxLeft();
+        const rect = slideContainer.getBoundingClientRect();
+        let newLeft = clientX - rect.left - startX;
+
+        const maxLeft = rect.width - slideHandle.offsetWidth - 16;
 
         if (newLeft < 0) newLeft = 0;
         if (newLeft > maxLeft) newLeft = maxLeft;
 
         slideHandle.style.left = newLeft + "px";
-    });
+    }
+
+    function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+
+        const rect = slideContainer.getBoundingClientRect();
+        const maxLeft = rect.width - slideHandle.offsetWidth - 16;
+        const currentLeft = parseInt(slideHandle.style.left || 0);
+
+        if (currentLeft >= maxLeft - 5) {
+            answerCall();
+        } else {
+            slideHandle.style.left = "0px";
+        }
+    }
+
+    slideHandle.addEventListener("mousedown", e => startDrag(e.clientX));
+    window.addEventListener("mousemove", e => moveDrag(e.clientX));
+    window.addEventListener("mouseup", endDrag);
+
+    slideHandle.addEventListener("touchstart", e => startDrag(e.touches[0].clientX));
+    window.addEventListener("touchmove", e => moveDrag(e.touches[0].clientX));
+    window.addEventListener("touchend", endDrag);
 </script>
 
 </body>
