@@ -43,30 +43,11 @@
         opacity: 0.8;
     }
 
-    /* Banner (reduced to about half height, still dynamic) */
+    /* Banner */
     .banner {
         width: 100%;
         position: relative;
         overflow: hidden;
-        height: 16vh;
-        min-height: 110px;
-        max-height: 180px;
-    }
-
-    @media (min-width: 600px) {
-        .banner {
-            height: 18vh;
-            min-height: 130px;
-            max-height: 200px;
-        }
-    }
-
-    @media (min-width: 900px) {
-        .banner {
-            height: 20vh;
-            min-height: 150px;
-            max-height: 220px;
-        }
     }
 
     .banner img {
@@ -104,58 +85,13 @@
     }
 
     .banner-title {
-        font-size: 28px;
+        font-size: 32px;
         font-weight: bold;
     }
 
     .banner-sub {
-        font-size: 16px;
+        font-size: 18px;
         opacity: 0.8;
-    }
-
-    /* Number display row */
-    .number-display-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 16px 4px;
-        gap: 10px;
-    }
-
-    .number-display {
-        flex: 1;
-        text-align: center;
-        font-size: 30px;
-        font-weight: 300;
-        letter-spacing: 1px;
-        min-height: 36px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .number-display.pop {
-        animation: digitPop 0.18s ease;
-    }
-
-    .backspace-btn {
-        background: transparent;
-        border: none;
-        color: #fff;
-        font-size: 22px;
-        cursor: pointer;
-        padding: 4px 6px;
-        opacity: 0.8;
-    }
-
-    .backspace-btn:active {
-        opacity: 1;
-    }
-
-    @keyframes digitPop {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.08); }
-        100% { transform: scale(1); }
     }
 
     /* Keypad */
@@ -164,7 +100,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding-top: 4px;
+        padding-top: 10px;
     }
 
     .keypad {
@@ -196,25 +132,10 @@
         font-size: 32px;
         cursor: pointer;
         transition: background 0.2s;
-        opacity: 0;
-        transform: scale(0.6);
-        animation: keyPop 0.25s ease forwards;
-        animation-delay: var(--delay, 0s);
     }
 
     .key:active {
         background: #444;
-    }
-
-    @keyframes keyPop {
-        0% {
-            opacity: 0;
-            transform: scale(0.6);
-        }
-        100% {
-            opacity: 1;
-            transform: scale(1);
-        }
     }
 
     /* Bottom Section */
@@ -310,12 +231,6 @@
         <div class="banner-title">Zoo HQ</div>
         <div class="banner-sub">Incoming call</div>
     </div>
-</div>
-
-<!-- Number Display -->
-<div class="number-display-row">
-    <div id="numberDisplay" class="number-display"></div>
-    <button id="backspaceBtn" class="backspace-btn">⌫</button>
 </div>
 
 <!-- Keypad -->
@@ -447,60 +362,7 @@
     slideHandle.addEventListener("touchstart", e => startDrag(e.touches[0].clientX));
     window.addEventListener("touchmove", e => moveDrag(e.touches[0].clientX));
     window.addEventListener("touchend", endDrag);
-
-    /* Number display logic */
-    const numberDisplay = document.getElementById("numberDisplay");
-    const backspaceBtn = document.getElementById("backspaceBtn");
-    const keys = document.querySelectorAll(".key");
-
-    let rawDigits = "";
-
-    function formatNumber(raw) {
-        const digits = raw.replace(/\D/g, "");
-        if (digits.length <= 3) return digits;
-        if (digits.length <= 5) return digits.slice(0, 3) + " " + digits.slice(3);
-        return digits.slice(0, 3) + " " + digits.slice(3, 5) + " " + digits.slice(5);
-    }
-
-    function updateDisplay(pop = true) {
-        numberDisplay.textContent = formatNumber(rawDigits);
-        if (pop && rawDigits.length > 0) {
-            numberDisplay.classList.remove("pop");
-            void numberDisplay.offsetWidth; // restart animation
-            numberDisplay.classList.add("pop");
-        }
-    }
-
-    keys.forEach((key, index) => {
-        // Sequential pop-in delay (left→right, top→bottom)
-        const row = Math.floor(index / 3);
-        const col = index % 3;
-        const orderIndex = row * 3 + col;
-        key.style.setProperty("--delay", (orderIndex * 0.07) + "s");
-
-        key.addEventListener("click", () => {
-            const val = key.textContent.trim();
-            if (/^\d$/.test(val)) {
-                rawDigits += val;
-                updateDisplay(true);
-            }
-            // * and # are ignored for the number display (iPhone-like)
-        });
-    });
-
-    backspaceBtn.addEventListener("click", () => {
-        if (rawDigits.length > 0) {
-            rawDigits = rawDigits.slice(0, -1);
-            updateDisplay(false);
-        }
-    });
-
-    numberDisplay.addEventListener("animationend", () => {
-        numberDisplay.classList.remove("pop");
-    });
 </script>
 
 </body>
 </html>
-
-
