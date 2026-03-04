@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>iPhone Keypad Mock</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
   <style>
     * {
       box-sizing: border-box;
@@ -19,7 +21,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
+      overflow: hidden; /* No scrolling */
     }
 
     .keypad-wrapper {
@@ -63,7 +65,6 @@
       justify-content: center;
       cursor: pointer;
       user-select: none;
-      -webkit-user-select: none;
       transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.05s ease;
     }
 
@@ -77,7 +78,6 @@
       font-size: 28px;
       font-weight: 500;
       color: #111;
-      line-height: 1;
     }
 
     .key-sub {
@@ -104,19 +104,13 @@
       justify-content: center;
       color: #fff;
       font-size: 24px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       cursor: pointer;
-      transition: transform 0.05s ease, box-shadow 0.05s ease, background 0.05s ease;
+      transition: transform 0.05s ease, box-shadow 0.05s ease;
     }
 
     .call-btn:active {
       transform: scale(0.96);
-      box-shadow: 0 2px 4px rgba(0,0,0,0.25);
       background: #2fb451;
-    }
-
-    .bottom-placeholder {
-      height: 56px;
     }
 
     .delete-btn {
@@ -135,39 +129,79 @@
     }
   </style>
 </head>
+
 <body>
   <div class="keypad-wrapper">
     <div id="display" class="display"></div>
 
     <div class="keys">
-      <div class="key" data-value="1">
-        <div class="key-main">1</div>
-      </div>
-      <div class="key" data-value="2">
-        <div class="key-main">2</div>
-        <div class="key-sub">ABC</div>
-      </div>
-      <div class="key" data-value="3">
-        <div class="key-main">3</div>
-        <div class="key-sub">DEF</div>
-      </div>
+      <div class="key" data-value="1"><div class="key-main">1</div></div>
+      <div class="key" data-value="2"><div class="key-main">2</div><div class="key-sub">ABC</div></div>
+      <div class="key" data-value="3"><div class="key-main">3</div><div class="key-sub">DEF</div></div>
 
-      <div class="key" data-value="4">
-        <div class="key-main">4</div>
-        <div class="key-sub">GHI</div>
-      </div>
-      <div class="key" data-value="5">
-        <div class="key-main">5</div>
-        <div class="key-sub">JKL</div>
-      </div>
-      <div class="key" data-value="6">
-        <div class="key-main">6</div>
-        <div class="key-sub">MNO</div>
-      </div>
+      <div class="key" data-value="4"><div class="key-main">4</div><div class="key-sub">GHI</div></div>
+      <div class="key" data-value="5"><div class="key-main">5</div><div class="key-sub">JKL</div></div>
+      <div class="key" data-value="6"><div class="key-main">6</div><div class="key-sub">MNO</div></div>
 
-      <div class="key" data-value="7">
-        <div class="key-main">7</div>
-        <div class="key-sub">PQRS</div>
-      </div>
-      <div class="key" data-value="8">
-        <div class="key-main">
+      <div class="key" data-value="7"><div class="key-main">7</div><div class="key-sub">PQRS</div></div>
+      <div class="key" data-value="8"><div class="key-main">8</div><div class="key-sub">TUV</div></div>
+      <div class="key" data-value="9"><div class="key-main">9</div><div class="key-sub">WXYZ</div></div>
+
+      <div class="key" data-value="*"><div class="key-main">*</div></div>
+      <div class="key" data-value="0"><div class="key-main">0</div></div>
+      <div class="key" data-value="#"><div class="key-main">#</div></div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="bottom-placeholder"></div>
+      <div class="call-btn">📞</div>
+      <div class="delete-btn">⌫</div>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const keys = document.querySelectorAll(".key");
+
+    // Unique sound for each key
+    const sounds = {
+      "1": new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"),
+      "2": new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg"),
+      "3": new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"),
+      "4": new Audio("https://actions.google.com/sounds/v1/cartoon/slide_whistle_to_drum_hit.ogg"),
+      "5": new Audio("https://actions.google.com/sounds/v1/cartoon/metal_twang.ogg"),
+      "6": new Audio("https://actions.google.com/sounds/v1/cartoon/boing.ogg"),
+      "7": new Audio("https://actions.google.com/sounds/v1/cartoon/descending_whistle.ogg"),
+      "8": new Audio("https://actions.google.com/sounds/v1/cartoon/bubble_pop.ogg"),
+      "9": new Audio("https://actions.google.com/sounds/v1/cartoon/clang.ogg"),
+      "0": new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"),
+      "*": new Audio("https://actions.google.com/sounds/v1/cartoon/boing.ogg"),
+      "#": new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg")
+    };
+
+    keys.forEach(key => {
+      key.addEventListener("click", () => {
+        const value = key.dataset.value;
+
+        // Add number + space
+        display.textContent += value + " ";
+
+        // Play sound
+        if (sounds[value]) {
+          sounds[value].currentTime = 0;
+          sounds[value].play();
+        }
+      });
+    });
+
+    // Delete last entry
+    document.querySelector(".delete-btn").addEventListener("click", () => {
+      let parts = display.textContent.trim().split(" ");
+      parts.pop();
+      display.textContent = parts.join(" ") + (parts.length ? " " : "");
+    });
+  </script>
+
+</body>
+</html>
+
